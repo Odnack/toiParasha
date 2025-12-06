@@ -10,8 +10,8 @@ private:
 	AVLTreeIndex* nameIndex;
 	VisitIdIndex* visitIdIndex;
 	VisitCountIndex* visitCountIndex;
-	int visitCountIndexSize;
 
+	int visitCountIndexSize;
 	int recordCount;
 	int capacity;
 
@@ -41,7 +41,7 @@ public:
 	int binarySearchByVisitId(int targetVisitId) const;
 	int binarySearchByVisitCount(int targetVisitCount) const;
 
-	const GymVisit* getVisits() const { return visits; }
+	GymVisit* getVisits() const { return visits; }
 	const AVLTreeIndex* getNameIndex() const { return nameIndex; }
 	const VisitIdIndex* getVisitIdIndex() const { return visitIdIndex; }
 	const VisitCountIndex* getVisitCountIndex() const { return visitCountIndex; }

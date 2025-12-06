@@ -48,20 +48,20 @@ void GymConsole::displayVisit(const GymVisit& visit, int number) const
 		return;
 	}
 
-	cout << setw(5) << left <<  to_string(number) + " |"
+	cout << setw(5) << left << to_string(number) + " |"
 		<< setw(16) << left << visit.visitId << " | "
 		<< setw(22) << left << visit.fullName << " | "
 		<< setw(16) << left << visit.getFormattedDateTime() << " | "
 		<< visit.gymAddress << endl;
 }
 
-void GymConsole::displayVisitWithCount(const GymVisit &visit, int number, unsigned short count) const {
-  cout << setw(5) << left << to_string(number) + " |"
-      << setw(16) << left << visit.visitId << " | "
-      << setw(22) << left << visit.fullName << " | "
-      << setw(16) << left << visit.getFormattedDateTime() << " | "
-      << setw(16) << visit.gymAddress << " | "
-      << count << endl;
+void GymConsole::displayVisitWithCount(const GymVisit& visit, int number, unsigned short count) const {
+	cout << setw(5) << left << to_string(number) + " |"
+		<< setw(16) << left << visit.visitId << " | "
+		<< setw(22) << left << visit.fullName << " | "
+		<< setw(16) << left << visit.getFormattedDateTime() << " | "
+		<< setw(16) << visit.gymAddress << " | "
+		<< count << endl;
 }
 
 void GymConsole::handleInputData()
@@ -162,11 +162,21 @@ void GymConsole::displayByNameAsc() const
 		return;
 	}
 
+	int size;
+	int count = 1;
+	GymVisit* visits = dataManager.getVisits();
+	GymVisit* ascArray = index->getAscOrdered(visits, size);
+
 	cout << "Данные отсортированные по ФИО по возрастанию:" << endl;
 	printHeader();
-	const GymVisit* visits = dataManager.getVisits();
-
-	index->displayAsc(visits, this, &GymConsole::displayVisit);
+	for (int i = 0; i < size; i++)
+	{
+		const GymVisit& visit = ascArray[i];
+		if (!visit.isDeleted) {
+			displayVisit(visit, count);
+			count++;
+		}
+	}
 }
 
 void GymConsole::displayByNameDesc() const
@@ -178,11 +188,21 @@ void GymConsole::displayByNameDesc() const
 		return;
 	}
 
-	cout << "Данные отсортированные по ФИО по убыванию:" << endl;
-	printHeader();
-	const GymVisit* visits = dataManager.getVisits();
+	int size;
+	int count = 1;
+	GymVisit* visits = dataManager.getVisits();
+	GymVisit* descArray = index->getDescOrdered(visits, size);
 
-	index->displayDesc(visits, this, &GymConsole::displayVisit);
+	cout << "Данные отсортированные по ФИО по возрастанию:" << endl;
+	printHeader();
+	for (int i = 0; i < size; i++)
+	{
+		const GymVisit& visit = descArray[i];
+		if (!visit.isDeleted) {
+			displayVisit(visit, count);
+			count++;
+		}
+	}
 }
 
 void GymConsole::displayByVisitIdAsc() const

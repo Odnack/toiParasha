@@ -24,7 +24,7 @@ private:
 	void displayByNameAsc() const;
 	void displayByNameDesc() const;
 	void displayByVisitIdAsc() const;
-	void displayByVisitCountAsc() const; 
+	void displayByVisitCountAsc() const;
 	void displayByVisitCountDesc() const;
 
 	void searchByName() const;

@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AVLNode.cpp" />
     <ClCompile Include="AVLTreeIndex.cpp" />
     <ClCompile Include="GymDataManager.cpp" />
     <ClCompile Include="GymConsole.cpp" />

@@ -1,7 +1,6 @@
 #pragma once
 #include "AVLNode.h"
 #include "GymVisit.h"
-#include "GymConsole.h"
 #include <string>
 #include <iostream>
 #include <algorithm>
@@ -36,8 +35,10 @@ private:
 
 	AVLNode* balance(AVLNode* node);
 
-	void inorderAsc(AVLNode* node, const GymVisit* visits, int& count, void (GymConsole::* displayFunc)(const GymVisit&, int) const, const GymConsole* console) const;
-	void inorderDesc(AVLNode* node, const GymVisit* visits, int& count, void (GymConsole::* displayFunc)(const GymVisit&, int) const, const GymConsole* console) const;
+	void collectAscOrder(AVLNode* node, GymVisit* visits, GymVisit* result, int& index) const;
+	void collectDescOrder(AVLNode* node, GymVisit* visits, GymVisit* result, int& index) const;
+
+	int countNodes(AVLNode* node) const;
 
 	AVLNode* searchRecursive(AVLNode* node, const string& name) const;
 	AVLNode* searchIterative(AVLNode* node, const string& name) const;
@@ -62,6 +63,6 @@ public:
 	AVLNode* findRecursive(const string& name) const { return searchRecursive(root, name); }
 	AVLNode* findIterative(const string& name) const { return searchIterative(root, name); }
 
-	void displayAsc(const GymVisit* visits, const GymConsole* console, void (GymConsole::* displayFunc)(const GymVisit&, int) const) const;
-	void displayDesc(const GymVisit* visits, const GymConsole* console, void (GymConsole::* displayFunc)(const GymVisit&, int) const) const;
+	GymVisit* getAscOrdered(GymVisit* visits, int& outSize) const;
+	GymVisit* getDescOrdered(GymVisit* visits, int& outSize) const;
 };

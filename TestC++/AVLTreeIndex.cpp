@@ -1,6 +1,5 @@
 #include "AVLTreeIndex.h"
 #include "GymVisit.h"
-#include "GymConsole.h"
 
 AVLNode* AVLTreeIndex::rightRotate(AVLNode* y)
 {
@@ -157,48 +156,73 @@ void AVLTreeIndex::removeRecord(const string& name, int originalIdx)
 	root = remove(root, name, originalIdx);
 }
 
-void AVLTreeIndex::inorderAsc(AVLNode* node, const GymVisit* visits, int& count, void (GymConsole::* displayFunc)(const GymVisit&, int) const, const GymConsole* console) const
+void AVLTreeIndex::collectAscOrder(AVLNode* node, GymVisit* visits, GymVisit* result, int& index) const
 {
 	if (node == nullptr)
 	{
 		return;
 	}
 
-	inorderAsc(node->left, visits, count, displayFunc, console);
-	const GymVisit& visit = visits[node->originalIndex];
-	if (!visit.isDeleted) {
-		(console->*displayFunc)(visit, count);
-		count++;
+	collectAscOrder(node->left, visits, result, index);
+	GymVisit& visit = visits[node->originalIndex];
+	if (!visit.isDeleted)
+	{
+		result[index++] = visit;
 	}
-	inorderAsc(node->right, visits, count, displayFunc, console);
+	collectAscOrder(node->right, visits, result, index);
 }
 
-void AVLTreeIndex::displayAsc(const GymVisit* visits, const GymConsole* console, void (GymConsole::* displayFunc)(const GymVisit&, int) const) const
-{
-	int count = 1;
-	inorderAsc(root, visits, count, displayFunc, console);
-}
-
-void AVLTreeIndex::inorderDesc(AVLNode* node, const GymVisit* visits, int& count, void (GymConsole::* displayFunc)(const GymVisit&, int) const, const GymConsole* console) const
+void AVLTreeIndex::collectDescOrder(AVLNode* node, GymVisit* visits, GymVisit* result, int& index) const
 {
 	if (node == nullptr)
 	{
 		return;
 	}
 
-	inorderDesc(node->right, visits, count, displayFunc, console);
-	const GymVisit& visit = visits[node->originalIndex];
-	if (!visit.isDeleted) {
-		(console->*displayFunc)(visit, count);
-		count++;
+	collectDescOrder(node->right, visits, result, index);
+	GymVisit& visit = visits[node->originalIndex];
+	if (!visit.isDeleted)
+	{
+		result[index++] = visit;
 	}
-	inorderDesc(node->left, visits, count, displayFunc, console);
+	collectDescOrder(node->left, visits, result, index);
 }
 
-void AVLTreeIndex::displayDesc(const GymVisit* visits, const GymConsole* console, void (GymConsole::* displayFunc)(const GymVisit&, int) const) const
+GymVisit* AVLTreeIndex::getAscOrdered(GymVisit* visits, int& outSize) const
 {
-	int count = 1;
-	inorderDesc(root, visits, count, displayFunc, console);
+	int totalCount = countNodes(root);
+
+	GymVisit* result = new GymVisit[totalCount];
+
+	int index = 0;
+	collectAscOrder(root, visits, result, index);
+
+	outSize = index;
+
+	return result;
+}
+
+GymVisit* AVLTreeIndex::getDescOrdered(GymVisit* visits, int& outSize) const
+{
+	int totalCount = countNodes(root);
+
+	GymVisit* result = new GymVisit[totalCount];
+
+	int index = 0;
+	collectDescOrder(root, visits, result, index);
+
+	outSize = index;
+
+	return result;
+}
+
+int AVLTreeIndex::countNodes(AVLNode* node) const
+{
+	if (node == nullptr)
+	{
+		return 0;
+	}
+	return 1 + countNodes(node->left) + countNodes(node->right);
 }
 
 AVLNode* AVLTreeIndex::searchRecursive(AVLNode* node, const string& name) const
