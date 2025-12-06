@@ -11,4 +11,5 @@ public:
 	AVLNode* right;
 
 	AVLNode(const string& name, int originalIdx);
+	~AVLNode();
 };

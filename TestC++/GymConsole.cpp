@@ -193,7 +193,7 @@ void GymConsole::displayByNameDesc() const
 	GymVisit* visits = dataManager.getVisits();
 	GymVisit* descArray = index->getDescOrdered(visits, size);
 
-	cout << "Данные отсортированные по ФИО по возрастанию:" << endl;
+	cout << "Данные отсортированные по ФИО по убыванию:" << endl;
 	printHeader();
 	for (int i = 0; i < size; i++)
 	{

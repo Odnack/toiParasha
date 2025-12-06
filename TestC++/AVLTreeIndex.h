@@ -49,16 +49,14 @@ public:
 	AVLTreeIndex() : root(nullptr) {}
 	~AVLTreeIndex()
 	{
-		deleteTree(root);
+		if(root != nullptr)
+		{
+			delete root;
+		}
 	}
 
 	void insertRecord(const string& name, int originalIdx);
 	void removeRecord(const string& name, int originalIdx);
-	void clear()
-	{
-		deleteTree(root);
-		root = nullptr;
-	}
 
 	AVLNode* findRecursive(const string& name) const { return searchRecursive(root, name); }
 	AVLNode* findIterative(const string& name) const { return searchIterative(root, name); }

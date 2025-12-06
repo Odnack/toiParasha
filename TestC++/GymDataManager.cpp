@@ -13,8 +13,8 @@ GymDataManager::GymDataManager()
 GymDataManager::~GymDataManager()
 {
 	delete[] visits;
-	delete[] nameIndex;
 	delete[] visitIdIndex;
+	delete nameIndex;
 }
 
 void GymDataManager::resizeIfNeeded()
@@ -123,7 +123,7 @@ int GymDataManager::getActiveRecordCount() const
 
 void GymDataManager::buildNameIndex()
 {
-	delete[] nameIndex;
+	delete nameIndex;
 	nameIndex = new AVLTreeIndex();
 
 	for (int i = 0; i < recordCount; i++)
