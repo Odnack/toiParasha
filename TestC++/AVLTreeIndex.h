@@ -2,8 +2,6 @@
 #include "AVLNode.h"
 #include "GymVisit.h"
 #include <string>
-#include <iostream>
-#include <algorithm>
 
 using namespace std;
 
@@ -19,6 +17,7 @@ private:
 		return node ? (getHeight(node->left) - getHeight(node->right)) : 0;
 	}
 
+	//метод обновления высоты: увеличивает счётчик размера дерева
 	void updateHeight(AVLNode* node) {
 		if (node) {
 			node->height = 1 + max(getHeight(node->left), getHeight(node->right));

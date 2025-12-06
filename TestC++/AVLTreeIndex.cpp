@@ -3,7 +3,7 @@
 
 AVLNode* AVLTreeIndex::rightRotate(AVLNode* y)
 {
-	AVLNode* x = y->left;
+	AVLNode* x = y->left; 
 	AVLNode* temp = x->right;
 
 	x->right = y;
@@ -37,29 +37,37 @@ AVLNode* AVLTreeIndex::balance(AVLNode* node)
 	}
 
 	updateHeight(node);
+	//getBalanceFactor(node) возвращает разницу левой и правой ноды
 	int balanceFactor = getBalanceFactor(node);
 
 	if (balanceFactor > 1 && getBalanceFactor(node->left) >= 0) {
-		return rightRotate(node);
+		return rightRotate(node); //поворачивает дерево направо
 	}
 
 	if (balanceFactor > 1 && getBalanceFactor(node->left) < 0) {
 		node->left = leftRotate(node->left);
-		return rightRotate(node);
+		return rightRotate(node); //поворачивает дерево направо
 	}
 
 	if (balanceFactor < -1 && getBalanceFactor(node->right) <= 0) {
-		return leftRotate(node);
+		return leftRotate(node); //поворачивает дерево налево
 	}
 
 	if (balanceFactor < -1 && getBalanceFactor(node->right) > 0) {
 		node->right = rightRotate(node->right);
-		return leftRotate(node);
+		return leftRotate(node); //поворачивает дерево налево
 	}
 
 	return node;
 }
 
+//метод, вызывающий добавление элемента в индекс
+void AVLTreeIndex::insertRecord(const string& name, int originalIdx)
+{
+	root = insert(root, name, originalIdx);
+}
+
+//рекурсивное добавление элемента в индекс
 AVLNode* AVLTreeIndex::insert(AVLNode* node, const string& name, int originalIdx)
 {
 	if (node == nullptr)
@@ -76,12 +84,7 @@ AVLNode* AVLTreeIndex::insert(AVLNode* node, const string& name, int originalIdx
 		node->right = insert(node->right, name, originalIdx);
 	}
 
-	return balance(node);
-}
-
-void AVLTreeIndex::insertRecord(const string& name, int originalIdx)
-{
-	root = insert(root, name, originalIdx);
+	return balance(node); //вызов балансировки
 }
 
 AVLNode* AVLTreeIndex::findMin(AVLNode* node)

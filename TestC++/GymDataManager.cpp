@@ -123,9 +123,10 @@ int GymDataManager::getActiveRecordCount() const
 
 void GymDataManager::buildNameIndex()
 {
-	delete nameIndex;
+	delete nameIndex; //удаление предыдущего индекса
 	nameIndex = new AVLTreeIndex();
 
+	//÷икл добавлени€ записей в индекс, кроме помеченных на удаление
 	for (int i = 0; i < recordCount; i++)
 	{
 		if (!visits[i].isDeleted) {
