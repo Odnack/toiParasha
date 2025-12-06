@@ -134,18 +134,20 @@ void GymDataManager::buildNameIndex()
 	}
 }
 
-int GymDataManager::findByNameRecursive(const string& targetName) const {
+AVLNode* GymDataManager::findByNameRecursive(const string& targetName) const 
+{
 	if (!nameIndex) 
 	{ 
-		return -1; 
+		return nullptr; 
 	}
 	return nameIndex->findRecursive(targetName);
 }
 
-int GymDataManager::findByNameIterative(const string& targetName) const {
+AVLNode* GymDataManager::findByNameIterative(const string& targetName) const 
+{
 	if (!nameIndex)
 	{
-		return -1;
+		return nullptr;
 	}
 	return nameIndex->findIterative(targetName);
 }

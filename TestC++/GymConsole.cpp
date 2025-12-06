@@ -162,7 +162,7 @@ void GymConsole::displayByNameAsc() const
 		return;
 	}
 
-	cout << "Данные отсортированные по ФИО (по возрастанию - АВЛ-дерево):" << endl;
+	cout << "Данные отсортированные по ФИО по возрастанию:" << endl;
 	printHeader();
 	const GymVisit* visits = dataManager.getVisits();
 
@@ -178,7 +178,7 @@ void GymConsole::displayByNameDesc() const
 		return;
 	}
 
-	cout << "Данные отсортированные по ФИО (по убыванию - АВЛ-дерево):" << endl;
+	cout << "Данные отсортированные по ФИО по убыванию:" << endl;
 	printHeader();
 	const GymVisit* visits = dataManager.getVisits();
 
@@ -265,7 +265,7 @@ void GymConsole::displayByVisitCountDesc() const
 
 void GymConsole::searchByName() const
 {
-	const NameIndex* index = dataManager.getNameIndex();
+	const AVLTreeIndex* index = dataManager.getNameIndex();
 	if (index == nullptr)
 	{
 		cout << "Индекс по ФИО не построен!" << endl;
@@ -273,12 +273,30 @@ void GymConsole::searchByName() const
 	}
 
 	char targetName[100];
+	int searchType;
+
 	cout << "Введите ФИО для поиска: ";
 	cin.getline(targetName, 100);
+	cout << "Выберите вариант поиска (1 - Рекурсивный, 2 - Итерационный): ";
+	cin >> searchType;
+	cin.ignore();
 
-	int searchIndex = dataManager.binarySearchByName(targetName);
+	AVLNode* foundNode = nullptr;
 
-	if (searchIndex == -1)
+	if (searchType == 1) {
+		foundNode = dataManager.findByNameRecursive(targetName);
+		cout << "Использован рекурсивный поиск" << endl;
+	}
+	else if (searchType == 2) {
+		foundNode = dataManager.findByNameIterative(targetName);
+		cout << "Использован итерационный поиск" << endl;
+	}
+	else {
+		cout << "Неверный выбор типа поиска!" << endl;
+		return;
+	}
+
+	if (foundNode == nullptr)
 	{
 		cout << "Запись с ФИО '" << targetName << "' не найдена" << endl;
 	}
@@ -289,23 +307,18 @@ void GymConsole::searchByName() const
 		cout << endl << "Все записи с ФИО '" << targetName << "':" << endl;
 		printHeader();
 
-		int currentIndex = searchIndex;
-		while (currentIndex > 0 && index[currentIndex - 1].fullName == targetName)
-		{
-			currentIndex--;
-		}
-
 		int count = 1;
-		while (currentIndex < dataManager.getRecordCount() && index[currentIndex].fullName == targetName)
-		{
-			int originalIndex = index[currentIndex].originalIndex;
-			const GymVisit& visit = visits[originalIndex];
-			if (!visit.isDeleted)
-			{
-				displayVisit(visit, count);
-				count++;
+		displayVisit(visits[foundNode->originalIndex], count++);
+
+		AVLNode* current = foundNode->right;
+		while (current != nullptr) {
+			if (current->fullName == targetName) {
+				displayVisit(visits[current->originalIndex], count++);
+				current = current->right;
 			}
-			currentIndex++;
+			else {
+				break;
+			}
 		}
 	}
 }
@@ -527,6 +540,11 @@ void GymConsole::physicalDeletion()
 	if (confirm == 'д' || confirm == 'Д')
 	{
 		dataManager.physicalDeleteMarked();
+
+		dataManager.buildNameIndex();
+		dataManager.buildVisitIdIndex();
+		dataManager.buildVisitCountIndex();
+
 		cout << "Физически удалено записей: " << deletedCount << endl;
 	}
 	else

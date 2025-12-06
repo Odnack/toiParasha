@@ -36,8 +36,8 @@ public:
 	void buildVisitIdIndex();
 	void buildVisitCountIndex();
 
-	int findByNameRecursive(const string& targetName) const;
-	int findByNameIterative(const string& targetName) const;
+	AVLNode* findByNameRecursive(const string& targetName) const;
+	AVLNode* findByNameIterative(const string& targetName) const;
 	int binarySearchByVisitId(int targetVisitId) const;
 	int binarySearchByVisitCount(int targetVisitCount) const;
 
