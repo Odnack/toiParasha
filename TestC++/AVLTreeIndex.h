@@ -12,11 +12,11 @@ private:
 	AVLNode* root;
 
 	int getHeight(AVLNode* node) const {
-		return node ? node->height : 0;
+		return node == nullptr ? 0 : node->height;
 	}
 
 	int getBalanceFactor(AVLNode* node) const {
-		return node ? (getHeight(node->left) - getHeight(node->right)) : 0;
+		return node == nullptr ? 0 : (getHeight(node->left) - getHeight(node->right));
 	}
 
 	void updateHeight(AVLNode* node) {
@@ -49,7 +49,7 @@ public:
 	AVLTreeIndex() : root(nullptr) {}
 	~AVLTreeIndex()
 	{
-		if(root != nullptr)
+		if (root != nullptr)
 		{
 			delete root;
 		}
