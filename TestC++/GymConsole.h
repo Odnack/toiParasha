@@ -12,8 +12,7 @@ private:
 	void displayVisitWithCount(const GymVisit& visit, int number, unsigned short count) const;
 
 	void handleInputData();
-	void handleDisplayData() const;
-	void handleSaveToFile() const;
+	void handleDisplayData(int choise) const;
 	void handleLoadFromFile();
 	void handleDeletionManagement();
 

@@ -19,9 +19,8 @@ public:
 
     ListNode* getForwardLinear() const;
     ListNode* getBackwardRecursive() const;
-    GymVisit* findAll(const string& targetName, int& outSize) const;
+    GymVisit** findAll(const string& targetName, int& outSize) const;
    
-    bool tryMarkDeleted(int index);
     bool tryRestore(int index);
     bool remove(int index);
     void removeMarked();

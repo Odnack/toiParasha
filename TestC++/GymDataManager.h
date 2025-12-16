@@ -14,11 +14,11 @@ public:
 
 	void addVisit(const GymVisit& visit);
 	bool tryEditVisit(int index, const GymVisit& newData);
-	bool tryMarkVisitDeleted(int index);
+	bool tryMarkVisitDeleted(GymVisit** visit, int size);
 	bool tryRestoreVisit(int index);
 	void physicalDeleteMarked();
 
-	GymVisit* findByName(const string& targetName, int& outSize) const;
+	GymVisit** findByName(const string& targetName, int& outSize) const;
 
 	ListNode* getVisits() const { return visits->getForwardLinear(); }
 	ListNode* getVisitsBackward() const { return visits->getBackwardRecursive(); }

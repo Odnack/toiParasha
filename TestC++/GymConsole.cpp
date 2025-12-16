@@ -75,13 +75,12 @@ void GymConsole::handleInputData()
 }
 
 //метод вывода списка
-void GymConsole::handleDisplayData() const
+void GymConsole::handleDisplayData(int choice) const
 {
 	//getRecordCount() возвращает поличество записей в списке
 	//int getRecordCount() const { return visits->getSize(); }
 	//int getSize() const { return size; }
 	int recordCount = dataManager.getRecordCount();
-	int choice;
 	const ListNode* current;
 
 	if (recordCount == 0)
@@ -89,9 +88,6 @@ void GymConsole::handleDisplayData() const
 		cout << "Нет данных для отображения" << endl;
 		return;
 	}
-
-	cout << "Введите вывод спсика (1 - по возрастанию, 2 - по убыванию): " << endl;
-	cin >> choice;
 
 	cout << "Список посещений:" << endl;
 	printHeader();
@@ -190,7 +186,7 @@ void GymConsole::searchByName() const
 	cout << "Введите ФИО для поиска: ";
 	cin.getline(targetName, 100);
 	int recordCount;
-	const GymVisit* visits = dataManager.findByName(targetName, recordCount);
+	GymVisit** visits = dataManager.findByName(targetName, recordCount);
 
 	if (recordCount == 0)
 	{
@@ -205,7 +201,7 @@ void GymConsole::searchByName() const
 
 		for (int i = 0; i < recordCount; i++)
 		{
-			displayVisit(visits[i], count++);
+			displayVisit(*(visits[i]), count++);
 		}
 	}
 }
@@ -219,41 +215,22 @@ void GymConsole::markForDeletion()
 		return;
 	}
 
-	handleDisplayData();
+	handleDisplayData(1);
 
-	int recordNum;
-	cout << "Введите номер записи для удаления: ";
-	cin >> recordNum;
-	cin.ignore();
+	char targetName[100];
+	cout << "Введите ФИО из записи для удаления: ";
+	cin.getline(targetName, 100);
 
-	if (recordNum < 1 || recordNum > activeRecordsCount)
-	{
-		cout << "Неверный номер записи!" << endl;
-		return;
-	}
+	int findCount;
+	GymVisit** visit = dataManager.findByName(targetName, findCount);
 
-	int actualIndex = -1;
-	int count = 0;
-	int recordCount = dataManager.getRecordCount();
-	ListNode* current = dataManager.getVisits();
-	for (int i = 0; i < recordCount; i++)
-	{
-		GymVisit visit = current->visit;
-		if (!visit.isDeleted)
-		{
-			displayVisit(visit, count);
-			count++;
-		}
-		current = current->next;
-	}
-
-	if (actualIndex == -1)
+	if (findCount == 0)
 	{
 		cout << "Запись не найдена!" << endl;
 		return;
 	}
 
-	if (dataManager.tryMarkVisitDeleted(actualIndex))
+	if (dataManager.tryMarkVisitDeleted(visit, findCount))
 	{
 		cout << "Запись помечена на удаление" << endl;
 	}
@@ -440,7 +417,10 @@ void GymConsole::run()
 			handleLoadFromFile();
 			break;
 		case 3:
-			handleDisplayData();
+			cout << "Введите вывод списка (1 - по возрастанию, 2 - по убыванию): " << endl;
+			cin >> choice;
+			cin.ignore();
+			handleDisplayData(choice);
 			break;
 		case 4:
 			searchByName();

@@ -30,9 +30,19 @@ bool GymDataManager::tryEditVisit(int index, const GymVisit& newData)
 	return false;
 }
 
-bool GymDataManager::tryMarkVisitDeleted(int index)
+bool GymDataManager::tryMarkVisitDeleted(GymVisit** visits, int size)
 {
-	return visits->tryMarkDeleted(index);
+	for (int i = 0; i < size; i++)
+	{
+		GymVisit* visit = visits[i];
+		if (!visit->isDeleted)
+		{
+			visit->isDeleted = true;
+			return true;
+		}
+	}
+	
+	return false;
 }
 
 bool GymDataManager::tryRestoreVisit(int index)
@@ -65,7 +75,7 @@ int GymDataManager::getActiveRecordCount() const
 	return count;
 }
 
-GymVisit* GymDataManager::findByName(const string& targetName, int& outSize) const
+GymVisit** GymDataManager::findByName(const string& targetName, int& outSize) const
 {
 	return visits->findAll(targetName, outSize);
 }

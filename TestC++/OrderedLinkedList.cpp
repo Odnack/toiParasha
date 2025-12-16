@@ -121,9 +121,9 @@ void OrderedLinkedList::getBackwardRecursiveHelper(ListNode* node, ListNode*& re
 	getBackwardRecursiveHelper(node->next, resultHead); //рекурсивный вызов со следующими элментами списка
 }
 
-GymVisit* OrderedLinkedList::findAll(const string& targetName, int& outSize) const
+GymVisit** OrderedLinkedList::findAll(const string& targetName, int& outSize) const
 {
-	GymVisit* resultArray = new GymVisit[size];
+	GymVisit** resultArray = new GymVisit*[size];
 
 	outSize = 0;
 	ListNode* current = head;
@@ -132,7 +132,7 @@ GymVisit* OrderedLinkedList::findAll(const string& targetName, int& outSize) con
 	{
 		if (current->visit.fullName == targetName)
 		{
-			resultArray[outSize] = current->visit;
+			resultArray[outSize] = &(current->visit);
 			outSize++;
 		}
 
@@ -232,28 +232,6 @@ bool OrderedLinkedList::remove(int index)
 
 	delete current;
 	size--;
-	return true;
-}
-
-bool OrderedLinkedList::tryMarkDeleted(int index)
-{
-	if (index < 0 || index >= size)
-	{
-		return false;
-	}
-
-	ListNode* current = head;
-	for (int i = 0; i < index; i++)
-	{
-		current = current->next;
-	}
-
-	if (current->visit.isDeleted)
-	{
-		return false;
-	}
-
-	current->visit.isDeleted = true;
 	return true;
 }
 
