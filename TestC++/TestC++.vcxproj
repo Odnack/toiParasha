@@ -132,6 +132,7 @@
     <ClCompile Include="GymDataManager.cpp" />
     <ClCompile Include="GymConsole.cpp" />
     <ClCompile Include="GymVisit.cpp" />
+    <ClCompile Include="OrderedLinkedList.cpp" />
     <ClCompile Include="TestC++.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +141,11 @@
     <ClInclude Include="GymDataManager.h" />
     <ClInclude Include="GymConsole.h" />
     <ClInclude Include="GymVisit.h" />
+    <ClInclude Include="ListNode.h" />
+    <ClInclude Include="OrderedLinkedList.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\..\Downloads\Telegram Desktop\test.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
