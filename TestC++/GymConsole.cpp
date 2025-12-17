@@ -102,7 +102,7 @@ void GymConsole::handleDisplayData(int choice) const
 		//ListNode* getVisitsBackward() const { return visits->getBackwardRecursive(); }
 	}
 	else {
-		cout << "Неверный ввод" << endl;
+		cout << "Неверный выбор!" << endl;
 		return;
 	}
 	
@@ -182,12 +182,30 @@ void GymConsole::displayByNameDesc() const
 void GymConsole::searchByName() const
 {
 	char targetName[100];
+	int choice;
+	GymVisit** visits;
+		int recordCount;
 
 	cout << "Введите ФИО для поиска: ";
 	cin.getline(targetName, 100);
-	int recordCount;
-	//заполенние переменной найденными записями
-	GymVisit** visits = dataManager.findByName(targetName, recordCount);
+
+	cout << "Введите способ поиска(1 - итерационный, 2 - рекурсивный): " << endl;
+	cin >> choice;
+	cin.ignore();
+
+	if (choice == 1) 
+	{
+		visits = dataManager.findByName(targetName, recordCount, false);
+	}
+	else if (choice == 2)
+	{
+		visits = dataManager.findByName(targetName, recordCount, true);
+	}
+	else
+	{
+		cout << "Неверный выбор!" << endl;
+		return;
+	}
 
 	//если нет записей с заданным ФИО, то выводится сообщение, азтем выход из метода
 	if (recordCount == 0)
@@ -225,7 +243,7 @@ void GymConsole::markForDeletion()
 	cin.getline(targetName, 100);
 
 	int findCount;
-	GymVisit** visit = dataManager.findByName(targetName, findCount);
+	GymVisit** visit = dataManager.findByName(targetName, findCount, false);
 
 	if (findCount == 0)
 	{

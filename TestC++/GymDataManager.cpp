@@ -77,9 +77,11 @@ int GymDataManager::getActiveRecordCount() const
 }
 
 //вызов поиска по имени
-GymVisit** GymDataManager::findByName(const string& targetName, int& outSize) const
+GymVisit** GymDataManager::findByName(const string& targetName, int& outSize, bool isRercursive) const
 {
-	return visits->findAll(targetName, outSize);
+	return isRercursive 
+		? visits->findAllRecursive(targetName, outSize)
+		: visits->findAll(targetName, outSize);
 }
 
 //метод преобразования строк файла в поля и добавления в список
