@@ -55,11 +55,12 @@ void GymDataManager::physicalDeleteMarked()
 	visits->removeMarked();
 }
 
+//поучение активных записей
 int GymDataManager::getActiveRecordCount() const
 {
 	int count = 0;
-	int recordCount = getRecordCount();
-	ListNode* current = visits->getForwardLinear();
+	int recordCount = getRecordCount(); //запись количества элементов списка
+	ListNode* current = visits->getForwardLinear(); //запись списка в порядке возрастания 
 
 	for (int i = 0; i < recordCount; i++)
 	{
@@ -75,6 +76,7 @@ int GymDataManager::getActiveRecordCount() const
 	return count;
 }
 
+//вызов поиска по имени
 GymVisit** GymDataManager::findByName(const string& targetName, int& outSize) const
 {
 	return visits->findAll(targetName, outSize);

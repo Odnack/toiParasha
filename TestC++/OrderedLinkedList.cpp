@@ -121,26 +121,31 @@ void OrderedLinkedList::getBackwardRecursiveHelper(ListNode* node, ListNode*& re
 	getBackwardRecursiveHelper(node->next, resultHead); //рекурсивный вызов со следующими элментами списка
 }
 
+//поиск по имени
 GymVisit** OrderedLinkedList::findAll(const string& targetName, int& outSize) const
 {
-	GymVisit** resultArray = new GymVisit*[size];
+	GymVisit** resultArray = new GymVisit*[size]; //создание новго массива
 
-	outSize = 0;
-	ListNode* current = head;
+    outSize = 0;
+	ListNode* current = head; //запись первого жлемента линейного списка в переменную
 
 	while (current != nullptr)
 	{
+		//если имя в записи совпадает с введённым для поиска, то происходит добавление записи в список 
 		if (current->visit.fullName == targetName)
 		{
 			resultArray[outSize] = &(current->visit);
 			outSize++;
 		}
 
+		//если имя в записи больше введённого для поиска (то есть ниже по алфавиту), 
+		// то происхоодит выхоод из цикла
 		if (current->visit.fullName > targetName)
 		{
 			break;
 		}
 
+		//переход к следующей записи посещения
 		current = current->next;
 	}
 

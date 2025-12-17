@@ -186,13 +186,15 @@ void GymConsole::searchByName() const
 	cout << "Введите ФИО для поиска: ";
 	cin.getline(targetName, 100);
 	int recordCount;
+	//заполенние переменной найденными записями
 	GymVisit** visits = dataManager.findByName(targetName, recordCount);
 
+	//если нет записей с заданным ФИО, то выводится сообщение, азтем выход из метода
 	if (recordCount == 0)
 	{
 		cout << "Запись с ФИО '" << targetName << "' не найдена" << endl;
 	}
-	else
+	else //иначе выводится заголовок и все записи с заданным ФИО
 	{
 		cout << endl << "Все записи с ФИО '" << targetName << "':" << endl;
 		printHeader();
@@ -201,11 +203,12 @@ void GymConsole::searchByName() const
 
 		for (int i = 0; i < recordCount; i++)
 		{
-			displayVisit(*(visits[i]), count++);
+			displayVisit(*(visits[i]), count++); //метод описан в пункте 2.
 		}
 	}
 }
 
+//функция пометки записи на удаление
 void GymConsole::markForDeletion()
 {
 	int activeRecordsCount = dataManager.getActiveRecordCount();
