@@ -147,6 +147,30 @@ GymVisit** OrderedLinkedList::findAll(const string& targetName, int& outSize) co
 	return resultArray;
 }
 
+GymVisit** OrderedLinkedList::findAllRecursive(const string& targetName, int& outSize) const
+{
+	GymVisit** resultArray = new GymVisit * [size];
+	outSize = 0;
+	findAllRecursiveHelper(head, targetName, resultArray, outSize);
+	return resultArray;
+}
+
+void OrderedLinkedList::findAllRecursiveHelper(ListNode* current, const string& targetName,
+	GymVisit** resultArray, int& outSize) const
+{
+	if (current == nullptr || current->visit.fullName > targetName)
+	{
+		return;
+	}
+
+	if (current->visit.fullName == targetName)
+	{
+		resultArray[outSize++] = &(current->visit);
+	}
+
+	findAllRecursiveHelper(current->next, targetName, resultArray, outSize);
+}
+
 void OrderedLinkedList::removeMarked()
 {
 	ListNode* current = head;
