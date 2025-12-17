@@ -121,7 +121,7 @@ void OrderedLinkedList::getBackwardRecursiveHelper(ListNode* node, ListNode*& re
 	getBackwardRecursiveHelper(node->next, resultHead); //рекурсивный вызов со следующими элментами списка
 }
 
-//поиск по имени
+//итерационный поиск по имени
 GymVisit** OrderedLinkedList::findAll(const string& targetName, int& outSize) const
 {
 	GymVisit** resultArray = new GymVisit*[size]; //создание новго массива
@@ -139,7 +139,7 @@ GymVisit** OrderedLinkedList::findAll(const string& targetName, int& outSize) co
 		}
 
 		//если имя в записи больше введённого для поиска (то есть ниже по алфавиту), 
-		// то происхоодит выхоод из цикла
+		// то происходит выход из цикла
 		if (current->visit.fullName > targetName)
 		{
 			break;
@@ -152,59 +152,69 @@ GymVisit** OrderedLinkedList::findAll(const string& targetName, int& outSize) co
 	return resultArray;
 }
 
+//вызов рекурсивного поиска по имени
 GymVisit** OrderedLinkedList::findAllRecursive(const string& targetName, int& outSize) const
 {
-	GymVisit** resultArray = new GymVisit * [size];
+	GymVisit** resultArray = new GymVisit * [size]; //создание массива указателей на список посещений
 	outSize = 0;
-	findAllRecursiveHelper(head, targetName, resultArray, outSize);
+	findAllRecursiveHelper(head, targetName, resultArray, outSize); //вызов самого поиска
 	return resultArray;
 }
 
+//рекурсивный поиска поиск по имени
 void OrderedLinkedList::findAllRecursiveHelper(ListNode* current, const string& targetName,
 	GymVisit** resultArray, int& outSize) const
 {
+	//если текущее посещение не заполнено ИЛИ
+	// имя в записи больше введённого для поиска (то есть ниже по алфавиту), 
+	// то происходит выход из цикла
 	if (current == nullptr || current->visit.fullName > targetName)
 	{
 		return;
 	}
 
+	//если имя в записи совпадает с введённым для поиска, то происходит добавление записи в список 
 	if (current->visit.fullName == targetName)
 	{
 		resultArray[outSize++] = &(current->visit);
 	}
-
+	
+	//вызов поиска со следующим элементом списка
 	findAllRecursiveHelper(current->next, targetName, resultArray, outSize);
 }
 
+//функция удаления с перезаписью линейного списка
 void OrderedLinkedList::removeMarked()
 {
 	ListNode* current = head;
 
+	//цикл удаления
 	while (current != nullptr)
 	{
-		ListNode* nextNode = current->next;
+		ListNode* nextNode = current->next; //запись следующего посещения nextNode
 
-		if (current->visit.isDeleted)
+		if (current->visit.isDeleted) //если посещение помечено на удаление
 		{
-			if (current->prev == nullptr)
+			if (current->prev == nullptr) //если у current нет предыдущего
 			{
-				head = current->next;
-				if (head != nullptr)
+				head = current->next; // тогда следующий элемент становится головой
+				if (head != nullptr) //если голова есть (существует следующий элемент у проверяемого)
 				{
-					head->prev = nullptr;
+					head->prev = nullptr; //то предыдущее для него становится пустым
 				}
-				else
+				else // если же головы нет, то последний элемент становится пустым
 				{
 					tail = nullptr;
 				}
 			}
-			else if (current->next == nullptr)
+			else if (current->next == nullptr) //если у current нет следующего
 			{
-				tail = current->prev;
-				tail->next = nullptr;
+				tail = current->prev; //запись последнего 
+				tail->next = nullptr; //у последнего нет следующего
 			}
-			else
+			else //если у текущего есть и следующее и предыдущее
 			{
+				//то в предыдущее и следующее текущего ссылаются друг на друга, убирая текущее из списка
 				current->prev->next = current->next;
 				current->next->prev = current->prev;
 			}
@@ -213,56 +223,11 @@ void OrderedLinkedList::removeMarked()
 			size--;
 		}
 
+		//переход к следующему элементу
 		current = nextNode;
 	}
 }
 
-void OrderedLinkedList::clear()
-{
-	clearList();
-}
-
-bool OrderedLinkedList::remove(int index)
-{
-	ListNode* current = head;
-
-	if (index < 0 || index >= size)
-	{
-		return false;
-	}
-
-	for (int i = 0; i < index; i++)
-	{
-		current = current->next;
-	}
-
-	if (current->prev == nullptr) 
-	{
-		head = current->next;
-		if (head != nullptr) 
-		{
-			head->prev = nullptr;
-		}
-		else
-		{
-			tail = nullptr;
-		}
-	}
-	else if (current->next == nullptr) 
-	{
-		tail = current->prev;
-		tail->next = nullptr;
-	}
-	else 
-	{
-		current->prev->next = current->next;
-		current->next->prev = current->prev;
-	}
-
-	delete current;
-	size--;
-	return true;
-}
 
 bool OrderedLinkedList::tryRestore(int index)
 {

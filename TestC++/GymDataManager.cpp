@@ -20,28 +20,21 @@ void GymDataManager::addVisit(const GymVisit& visit)
 	visits->addOrdered(visit);
 }
 
-bool GymDataManager::tryEditVisit(int index, const GymVisit& newData)
-{
-	if (visits->remove(index))
-	{
-		visits->addOrdered(newData);
-		return true;
-	}
-	return false;
-}
-
+//метод попытки пометить запись на удаление
 bool GymDataManager::tryMarkVisitDeleted(GymVisit** visits, int size)
 {
 	for (int i = 0; i < size; i++)
 	{
 		GymVisit* visit = visits[i];
-		if (!visit->isDeleted)
+		//если запись не помечена на удаление, то помечается, возврат true
+		if (!visit->isDeleted) 
 		{
 			visit->isDeleted = true;
 			return true;
 		}
 	}
 	
+	//возврат false только в случае неудачной пометки на удаление
 	return false;
 }
 
@@ -50,6 +43,7 @@ bool GymDataManager::tryRestoreVisit(int index)
 	return visits->tryRestore(index);
 }
 
+//вызов удаления
 void GymDataManager::physicalDeleteMarked()
 {
 	visits->removeMarked();
@@ -59,17 +53,19 @@ void GymDataManager::physicalDeleteMarked()
 int GymDataManager::getActiveRecordCount() const
 {
 	int count = 0;
-	int recordCount = getRecordCount(); //запись количества элементов списка
-	ListNode* current = visits->getForwardLinear(); //запись списка в порядке возрастания 
+	int recordCount = getRecordCount(); // запись количества элементов списка
+	ListNode* current = visits->getForwardLinear(); // запись списка в порядке возрастания 
 
-	for (int i = 0; i < recordCount; i++)
+	for (int i = 0; i < recordCount; i++) // цикл перебора всех элементов
 	{
 		GymVisit visit = current->visit;
 
+		// если элемент не помечен на удаление, то количество увеличивается
 		if (!visit.isDeleted)
 		{
 			count++;
 		}
+		// переход к следующему элементу
 		current = current->next;
 	}
 
@@ -79,6 +75,7 @@ int GymDataManager::getActiveRecordCount() const
 //вызов поиска по имени
 GymVisit** GymDataManager::findByName(const string& targetName, int& outSize, bool isRercursive) const
 {
+	//если isRercursive true, то вызывается рекурсивный поиск, иначе итерационный
 	return isRercursive 
 		? visits->findAllRecursive(targetName, outSize)
 		: visits->findAll(targetName, outSize);

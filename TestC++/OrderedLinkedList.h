@@ -24,10 +24,7 @@ public:
     GymVisit** findAllRecursive(const string& targetName, int& outSize) const;
 
     bool tryRestore(int index);
-    bool remove(int index);
     void removeMarked();
-
-    void clear();
 
     bool isEmpty() const { return head == nullptr; }
     int getSize() const { return size; }

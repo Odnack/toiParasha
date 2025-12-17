@@ -195,13 +195,15 @@ void GymConsole::searchByName() const
 
 	if (choice == 1) 
 	{
+		//вызов функции итерационного поиска
 		visits = dataManager.findByName(targetName, recordCount, false);
 	}
 	else if (choice == 2)
 	{
+		//вызов функции рекурсивного поиска
 		visits = dataManager.findByName(targetName, recordCount, true);
 	}
-	else
+	else //иначе возврат в меню
 	{
 		cout << "Неверный выбор!" << endl;
 		return;
@@ -229,28 +231,30 @@ void GymConsole::searchByName() const
 //функция пометки записи на удаление
 void GymConsole::markForDeletion()
 {
+	//получение количества записей
 	int activeRecordsCount = dataManager.getActiveRecordCount();
-	if (activeRecordsCount == 0)
+	if (activeRecordsCount == 0) //если записей нет, происходит выход из метода
 	{
 		cout << "Нет данных для удаления" << endl;
 		return;
 	}
 
-	handleDisplayData(1);
+	handleDisplayData(1); //вывод всех записей (итерационный)
 
 	char targetName[100];
 	cout << "Введите ФИО из записи для удаления: ";
 	cin.getline(targetName, 100);
 
 	int findCount;
-	GymVisit** visit = dataManager.findByName(targetName, findCount, false);
-
-	if (findCount == 0)
+	GymVisit** visit = dataManager.findByName(targetName, findCount, false); //поиск по имени (итерационный)
+	
+	if (findCount == 0) // при отсуствии записей с заданным ФИО происходит выход из метода
 	{
 		cout << "Запись не найдена!" << endl;
 		return;
 	}
 
+	//попытка пометить запись на удаление и вывод соотвествующего сообщения
 	if (dataManager.tryMarkVisitDeleted(visit, findCount))
 	{
 		cout << "Запись помечена на удаление" << endl;
@@ -328,11 +332,14 @@ void GymConsole::restoreRecord()
 	}
 }
 
+//метод удаления записи
 void GymConsole::physicalDeletion()
 {
 	int deletedCount = 0;
-	int recordCount = dataManager.getRecordCount();
-	ListNode* current = dataManager.getVisits();
+	int recordCount = dataManager.getRecordCount(); //запись количества записей
+	ListNode* current = dataManager.getVisits(); // запись первого посещения в порядке возрастания
+
+	//цикл подсчёта количства записей, помеченных на удаление
 	for (int i = 0; i < recordCount; i++)
 	{
 		GymVisit visit = current->visit;
@@ -343,17 +350,20 @@ void GymConsole::physicalDeletion()
 		current = current->next;
 	}
 
-	if (deletedCount == 0)
+	if (deletedCount == 0) //если таких записей нет, то происходит выход из метода
 	{
 		cout << "Нет записей для физического удаления" << endl;
 		return;
 	}
 
+	//подтверждение удаления записей
 	cout << "Будет удалено " << deletedCount << " записей. Продолжить? (д/н): ";
 	char confirm;
 	cin >> confirm;
 	cin.ignore();
 
+	//при подстверждении вызывается метод удаления, 
+	// при отмене - вывод соотвествующего сообщения
 	if (confirm == 'д' || confirm == 'Д')
 	{
 		dataManager.physicalDeleteMarked();
